@@ -99,7 +99,7 @@ public class Plotter {
 					.getMessagesPerDay(s);
 			data.addSeries(timeSeries);
 		}
-		JFreeChart chart = ChartFactory.createXYLineChart("TicTacToe", "Date",
+		JFreeChart chart = ChartFactory.createXYLineChart("Messages per day", "Date",
 				"Messages send", data);
 		drawChart(chart,"MessagesPerPersonPerDay.png");
 	}
@@ -111,7 +111,7 @@ public class Plotter {
 					.getMessagesPerDayCumulative(s);
 			data.addSeries(timeSeries);
 		}
-		JFreeChart chart = ChartFactory.createXYLineChart("TicTacToe", "Date",
+		JFreeChart chart = ChartFactory.createXYLineChart("Messages per day cumulative", "Date",
 				"Messages send", data);
 		drawChart(chart,"MessagesPerPersonPerDayCumulative.png");
 	}

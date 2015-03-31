@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -11,6 +12,8 @@ public class Message {
 
 	private String fullMessage;
 
+	public static final int CURRENT_YEAR = Calendar.getInstance().get(Calendar.YEAR);
+	
 	public String content;
 	public String day;
 	public String month;
@@ -62,6 +65,9 @@ public class Message {
 	public Date getDate() {
 		parseMessageContent();
 		if (person != null) {
+			if(year==null){
+				year = CURRENT_YEAR+"";
+			}
 			calendar.set(Integer.parseInt(year), Parser.getMonthInt(month),
 					Integer.parseInt(day));
 			return calendar.getTime();
@@ -74,21 +80,24 @@ public class Message {
 		if (dirty) {
 			// Avoid stackoverflowexception in regexes from too long messages;
 			String[] stringParts = fullMessage.split(":");
-			String msgInfo = stringParts[0] + ":" + stringParts[1] + ": ";
-			String msgContent = "";
-			for (int i = 2; i < stringParts.length; i++) {
-				msgContent += stringParts[i];
+			//System.out.println(fullMessage);
+			if(stringParts.length>=2){
+				String msgInfo = stringParts[0] + ":" + stringParts[1] + ": ";
+				String msgContent = "";
+				for (int i = 2; i < stringParts.length; i++) {
+					msgContent += stringParts[i];
+				}
+	
+				matcher = PATTERN_MSG_START.matcher(msgInfo);
+				if (matcher.find()) {
+					day = matcher.group(1);
+					month = matcher.group(2);
+					year = matcher.group(3);
+					time = matcher.group(4);
+					person = matcher.group(5);
+				}
+				content = msgContent;
 			}
-
-			matcher = PATTERN_MSG_START.matcher(msgInfo);
-			if (matcher.find()) {
-				day = matcher.group(1);
-				month = matcher.group(2);
-				year = matcher.group(3);
-				time = matcher.group(4);
-				person = matcher.group(5);
-			}
-			content = msgContent;
 		}
 		dirty = false;
 	}

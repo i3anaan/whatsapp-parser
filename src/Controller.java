@@ -17,6 +17,6 @@ public class Controller {
 			e.printStackTrace();
 		}
 		
-		System.out.println(DataStore.getInstance().getMessagePerDayToString());
+		//System.out.println(DataStore.getInstance().getMessagePerDayToString());
 	}
 }
