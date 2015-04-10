@@ -34,8 +34,6 @@ public class DataStore {
 
 	public void storeMessage(Message msg) {
 		if (msg != null) {
-			// System.out.println("Storing message: "+msg.toString());
-
 			// Messages per person per day
 			DateCountMap internalMap = messagesPerPersonPerDate.get(msg.person);
 			if (internalMap == null) {
@@ -61,28 +59,37 @@ public class DataStore {
 		return output;
 	}
 
-	public void buildChart() {
-		TimeSeriesCollection data = new TimeSeriesCollection();
+	public void setZeroPoints(){
+		setZeroPoints(getMinDate(),getMaxDate());
+	}
+	public void setZeroPoints(Date from, Date to){
 		for (String s : messagesPerPersonPerDate.keySet()) {
-			TimeSeries timeSeries = messagesPerPersonPerDate.get(s)
-					.getMessagesPerDay(s);
-			data.addSeries(timeSeries);
-		}
-		JFreeChart chart = ChartFactory.createXYLineChart("TicTacToe", "Date",
-				"Messages send", data);
-		XYPlot plot = chart.getXYPlot();
-		plot.getRenderer().setSeriesPaint(0, Color.RED);
-		plot.getRenderer().setSeriesPaint(0, Color.GREEN);
-		plot.getRenderer().setSeriesPaint(0, Color.BLUE);
-		
-		try {
-			ChartUtilities.saveChartAsPNG(new File("TestChart.png"), chart,
-					1920, 1200);
-		} catch (IOException e) {
-			e.printStackTrace();
+			messagesPerPersonPerDate.get(s).setZeroPoints(from, to);
 		}
 	}
-
+	
+	public Date getMinDate(){
+		Date minDate = null;
+		for (String s : messagesPerPersonPerDate.keySet()) {
+			Date newDate = messagesPerPersonPerDate.get(s).minDate;
+			if(minDate==null || newDate.before(minDate)){
+				minDate = newDate;
+			}
+		}
+		return minDate;
+	}
+	
+	public Date getMaxDate(){
+		Date maxDate = null;
+		for (String s : messagesPerPersonPerDate.keySet()) {
+			Date newDate = messagesPerPersonPerDate.get(s).maxDate;
+			if(maxDate==null || newDate.after(maxDate)){
+				maxDate = newDate;
+			}
+		}
+		return maxDate;
+	}
+	
 	public int getTotalMessages() {
 		int count = 0;
 		for (String s : messagesPerPersonPerDate.keySet()) {

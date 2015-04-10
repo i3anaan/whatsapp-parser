@@ -1,15 +1,14 @@
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 
 public class Parser {
 	
 
 	public static String REGEX_MONTHS = "(jan|feb|mrt|apr|mei|jun|jul|aug|sep|okt|nov|dec)";
-	public static String REGEX_MSG_START = "(\\d{1,2})\\s"+REGEX_MONTHS+"\\.\\s(\\d{4})?\\s?(\\d\\d:\\d\\d)\\s-\\s([\\w\\s]*):\\s((.|\\s)*)";
+	public static String REGEX_MSG_START = "(\\d{1,2})\\s"+REGEX_MONTHS+"\\.\\s(\\d{4})?\\s?(\\d\\d):(\\d\\d)\\s-\\s([\\w\\s]*):\\s((.|\\s)*)";
 	
 	public static void parse(Scanner file){
 		Message message = new Message();
@@ -23,35 +22,37 @@ public class Parser {
 			}else{
 				message.append(nextLine);
 			}
+			//System.out.println("getDate() "+message.getDate());
+			//System.out.println("getDateString() "+message.getDateString());
 		}
 		message.storeMessage();
 		System.out.println("Stored messages!");
-		Plotter.buildMessagesPerDay(DataStore.getInstance().getMessagesPerPersonDate());
-		Plotter.buildMessagesPerDayCumulative(DataStore.getInstance().getMessagesPerPersonDate());
+		System.out.println("MinDate: "+DataStore.getInstance().getMinDate());
+		System.out.println("MaxDate: "+DataStore.getInstance().getMaxDate());
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(DataStore.getInstance().getMaxDate());
+		calendar.add(Calendar.HOUR,-14*24);
+		Controller.TIME_PERIOD_FROM = calendar.getTime();
+		System.out.println("From Date: "+Controller.TIME_PERIOD_FROM);
+		
+		DataStore.getInstance().setZeroPoints();
+		System.out.println("Added empty time");
+		
+		Plotter.buildMessagesPerTimePeriod(DataStore.getInstance().getMessagesPerPersonDate());
+		Plotter.buildMessagesPerTimePeriodCumulative(DataStore.getInstance().getMessagesPerPersonDate());
+		Plotter.buildMessagesPerTimePeriodCumulativePerDay(DataStore.getInstance().getMessagesPerPersonDate());
+		
+		Plotter.buildMessagesPerTimePeriodFull(DataStore.getInstance().getMessagesPerPersonDate());
+		Plotter.buildMessagesPerTimePeriodCumulativeFull(DataStore.getInstance().getMessagesPerPersonDate());
+		Plotter.buildMessagesPerTimePeriodCumulativePerDayFull(DataStore.getInstance().getMessagesPerPersonDate());
+		System.out.println("Generated images!");
 		
 	}
 	
 	public static int getMonthInt(String s){
-		String[] months = new String[]{"jan","feb","mar","apr","may","jun","jul","aug","sep","okt","nov","dec"};
+		String[] months = new String[]{"jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov","dec"};
 		List<String> list = Arrays.asList(months);
 		return list.indexOf(s);		
 	}
-	/*
-	
-	public static void main(String[] args){
-		
-		String regex = "\\s?(\\d{4})?\\s";
-		String regex2 = "(\\d{1,2})\\s"+REGEX_MONTHS+"\\.\\s(\\d\\d:\\d\\d)\\s-\\s([\\w\\s]*):\\s((.|\\s)*)";
-		
-		System.out.println(" 2014 ".matches(regex));
-		System.out.println("2014 ".matches(regex));
-		System.out.println(" 2015 ".matches(regex));
-		System.out.println("  ".matches(regex));
-		System.out.println("".matches(regex));
-		
-		System.out.println("24 okt. 2014 02:08 - Shannon Cleijne: Ik wou nog doei zeggen".matches(REGEX_MSG_START));
-		System.out.println("31 mrt. 12:36 - Jaap Gerrits: Derk".matches(REGEX_MSG_START));
-		System.out.println("31 mrt. 12:36 - Jaap Gerrits: Derk".matches(regex2));
-	}
-	*/
 }

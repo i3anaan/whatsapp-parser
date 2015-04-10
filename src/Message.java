@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -18,7 +17,8 @@ public class Message {
 	public String day;
 	public String month;
 	public String year;
-	public String time;
+	public String hour;
+	public String minute;
 	public String person;
 
 	private boolean dirty;
@@ -51,7 +51,7 @@ public class Message {
 	public String toString() {
 		if (!fullMessage.isEmpty()) {
 			parseMessageContent();
-			return String.format("%s %s %s %s %s: %s", year, month, day, time,
+			return String.format("%s %s %s %s:%s %s: %s", year, month, day, hour,minute,
 					person, content);
 		} else {
 			return "[Empty Message]";
@@ -59,7 +59,7 @@ public class Message {
 	}
 
 	public String getDateString() {
-		return year + month + day;
+		return String.format("%s %s %s %s:%s",year,month,day,hour,minute);
 	}
 
 	public Date getDate() {
@@ -68,8 +68,22 @@ public class Message {
 			if(year==null){
 				year = CURRENT_YEAR+"";
 			}
+			calendar.clear();
 			calendar.set(Integer.parseInt(year), Parser.getMonthInt(month),
 					Integer.parseInt(day));
+			
+			if(Controller.PRECISION==Controller.PRECISION_HOUR || Controller.PRECISION==Controller.PRECISION_MINUTE){
+				calendar.set(Calendar.HOUR,Integer.parseInt(hour));
+			}else{
+				calendar.set(Calendar.HOUR,0);
+			}
+			if(Controller.PRECISION==Controller.PRECISION_MINUTE){
+				calendar.set(Calendar.MINUTE,Integer.parseInt(minute));
+			}else{
+				calendar.set(Calendar.MINUTE,0);
+			}
+
+			//System.out.println("Intern: "+calendar.getTime() + "   "+getDateString()+"  month: "+Parser.getMonthInt(month));
 			return calendar.getTime();
 		} else {
 			return null;
@@ -93,8 +107,9 @@ public class Message {
 					day = matcher.group(1);
 					month = matcher.group(2);
 					year = matcher.group(3);
-					time = matcher.group(4);
-					person = matcher.group(5);
+					hour = matcher.group(4);
+					minute = matcher.group(5);
+					person = matcher.group(6);
 				}
 				content = msgContent;
 			}
