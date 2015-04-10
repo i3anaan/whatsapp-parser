@@ -31,16 +31,28 @@ public class DataStore {
 		}
 		return instance;
 	}
+	
+	public static void clear(){
+		instance = new DataStore();
+	}
 
 	public void storeMessage(Message msg) {
 		if (msg != null) {
 			// Messages per person per day
-			DateCountMap internalMap = messagesPerPersonPerDate.get(msg.person);
-			if (internalMap == null) {
-				internalMap = new DateCountMap();
-				messagesPerPersonPerDate.put(msg.person, internalMap);
+			DateCountMap internalMapPerson = messagesPerPersonPerDate.get(msg.person);
+			if (internalMapPerson == null) {
+				internalMapPerson = new DateCountMap();
+				messagesPerPersonPerDate.put(msg.person, internalMapPerson);
 			}
-			internalMap.increaseOccurence(msg.getDate());
+			internalMapPerson.increaseOccurence(msg.getDate());
+			/*
+			DateCountMap internalMapEveryone = messagesPerPersonPerDate.get("Everyone");
+			if (internalMapEveryone == null) {
+				internalMapEveryone = new DateCountMap();
+				messagesPerPersonPerDate.put("Everyone", internalMapEveryone);
+			}
+			internalMapEveryone.increaseOccurence(msg.getDate());
+			*/
 		}
 	}
 

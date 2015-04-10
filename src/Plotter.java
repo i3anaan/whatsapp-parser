@@ -1,5 +1,6 @@
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -17,8 +18,8 @@ import org.jfree.data.time.TimeSeriesCollection;
 
 public class Plotter {
 
-	public static final int RESOLUTION_X = 5000;
-	public static final int RESOLUTION_Y = 2000;
+	public static final int RESOLUTION_X = 2500;
+	public static final int RESOLUTION_Y = 1000;
 
 	public static String FILE_PREFIX = Controller.CURRENT_FILE + "__"
 			+ DataStore.getInstance().getMinDate().toString().replace(":", "-").replace(" ","_")
@@ -119,8 +120,8 @@ public class Plotter {
 			TimeSeries timeSeries = map.get(s).getMessagesPerTimePeriod(s);
 			data.addSeries(timeSeries);
 		}
-		JFreeChart chart = ChartFactory.createXYLineChart(
-				"Messages per time period", "Date", "Messages send", data);
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(
+				"Messages per hour - Last 2 weeks", "", "Messages send", data);
 		drawChart(chart, FILE_PREFIX + "MessagesPerPersonPerTimePeriod.png");
 	}
 
@@ -132,8 +133,8 @@ public class Plotter {
 					.getMessagesPerTimePeriodCumulative(s);
 			data.addSeries(timeSeries);
 		}
-		JFreeChart chart = ChartFactory.createXYLineChart(
-				"Messages per time period cumulative", "Date", "Messages send",
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(
+				"Messages per hour cumulative - Last 2 weeks", "", "Messages send",
 				data);
 		drawChart(chart, FILE_PREFIX
 				+ "MessagesPerPersonPerTimePeriodCumulative.png");
@@ -147,8 +148,8 @@ public class Plotter {
 					.getMessagesPerTimePeriodCumulativePerDay(s);
 			data.addSeries(timeSeries);
 		}
-		JFreeChart chart = ChartFactory.createXYLineChart(
-				"Messages per time period cumulative per day", "Date",
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(
+				"Messages per hour cumulative per day - Last 2 weeks", "",
 				"Messages send", data);
 		drawChart(chart, FILE_PREFIX
 				+ "MessagesPerPersonPerTimePeriodCumulativePerDay.png");
@@ -163,8 +164,8 @@ public class Plotter {
 			TimeSeries timeSeries = map.get(s).getMessagesPerTimePeriodFull(s);
 			data.addSeries(timeSeries);
 		}
-		JFreeChart chart = ChartFactory.createXYLineChart(
-				"Messages per time period - FULL", "Date", "Messages send",
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(
+				"Messages per hour - Full", "", "Messages send",
 				data);
 		drawChart(chart, FILE_PREFIX + "MessagesPerPersonPerTimePeriodFull.png");
 	}
@@ -177,8 +178,8 @@ public class Plotter {
 					.getMessagesPerTimePeriodCumulativeFull(s);
 			data.addSeries(timeSeries);
 		}
-		JFreeChart chart = ChartFactory.createXYLineChart(
-				"Messages per time period cumulative - FULL", "Date",
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(
+				"Messages per hour cumulative - Full", "",
 				"Messages send", data);
 		drawChart(chart, FILE_PREFIX
 				+ "MessagesPerPersonPerTimePeriodCumulativeFull.png");
@@ -192,8 +193,8 @@ public class Plotter {
 					.getMessagesPerTimePeriodCumulativePerDayFull(s);
 			data.addSeries(timeSeries);
 		}
-		JFreeChart chart = ChartFactory.createXYLineChart(
-				"Messages per time period cumulative per day - FULL", "Date",
+		JFreeChart chart = ChartFactory.createTimeSeriesChart(
+				"Messages per hour cumulative per day - Full", "",
 				"Messages send", data);
 		drawChart(chart, FILE_PREFIX
 				+ "MessagesPerPersonPerTimePeriodCumulativePerDayFull.png");
@@ -201,7 +202,16 @@ public class Plotter {
 
 	public static void drawChart(JFreeChart chart, String name) {
 
+		Font font = new Font("Dialog", Font.PLAIN, 25);
+		
+		chart.getLegend().setItemFont(font);
+		chart.getTitle().setFont(font);
 		XYPlot plot = chart.getXYPlot();
+		plot.getDomainAxis().setLabelFont(font);
+		plot.getRangeAxis().setLabelFont(font);
+		plot.getDomainAxis().setTickLabelFont(font);
+		plot.getRangeAxis().setTickLabelFont(font);
+		
 		Color[] colors = new Color[] { Color.RED, Color.BLUE, Color.GREEN,
 				Color.YELLOW, Color.BLACK, Color.MAGENTA, Color.CYAN };
 		String[] styles = new String[] { STYLE_LINE, STYLE_DASH, STYLE_DOT };

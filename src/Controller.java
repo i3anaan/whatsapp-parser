@@ -34,6 +34,7 @@ public class Controller {
 							.useDelimiter("\\n");
 					Parser.parse(scanner);
 					scanner.close();
+					DataStore.clear();
 				}
 			}
 		} catch (FileNotFoundException e) {

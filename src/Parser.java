@@ -39,6 +39,12 @@ public class Parser {
 		DataStore.getInstance().setZeroPoints();
 		System.out.println("Added empty time");
 		
+		Plotter.FILE_PREFIX = Controller.CURRENT_FILE + "__"
+				+ DataStore.getInstance().getMinDate().toString().replace(":", "-").replace(" ","_")
+				+ "__"
+				+ DataStore.getInstance().getMaxDate().toString().replace(":", "-").replace(" ","_")
+				+ "__";
+		
 		Plotter.buildMessagesPerTimePeriod(DataStore.getInstance().getMessagesPerPersonDate());
 		Plotter.buildMessagesPerTimePeriodCumulative(DataStore.getInstance().getMessagesPerPersonDate());
 		Plotter.buildMessagesPerTimePeriodCumulativePerDay(DataStore.getInstance().getMessagesPerPersonDate());
