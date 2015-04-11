@@ -29,12 +29,20 @@ public class Parser {
 		System.out.println("Stored messages!");
 		System.out.println("MinDate: "+DataStore.getInstance().getMinDate());
 		System.out.println("MaxDate: "+DataStore.getInstance().getMaxDate());
-		
 		Calendar calendar = Calendar.getInstance();
+		
+		//Last 2 weeks
 		calendar.setTime(DataStore.getInstance().getMaxDate());
 		calendar.add(Calendar.HOUR,-14*24);
 		Controller.TIME_PERIOD_FROM = calendar.getTime();
 		System.out.println("From Date: "+Controller.TIME_PERIOD_FROM);
+		/*
+		//First 2 weeks
+		calendar.setTime(DataStore.getInstance().getMinDate());
+		calendar.add(Calendar.HOUR,14*24);
+		Controller.TIME_PERIOD_TO = calendar.getTime();
+		System.out.println("Till Date: "+Controller.TIME_PERIOD_TO);
+		*/
 		
 		DataStore.getInstance().setZeroPoints();
 		System.out.println("Added empty time");

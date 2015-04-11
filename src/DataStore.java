@@ -37,7 +37,7 @@ public class DataStore {
 	}
 
 	public void storeMessage(Message msg) {
-		if (msg != null) {
+		if (msg != null && !msg.person.toLowerCase().contains("heeft een nieuw nummer")) {
 			// Messages per person per day
 			DateCountMap internalMapPerson = messagesPerPersonPerDate.get(msg.person);
 			if (internalMapPerson == null) {
